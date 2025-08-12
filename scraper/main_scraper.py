@@ -10,6 +10,8 @@ from datetime import datetime
 from typing import Optional
 
 from .simple_scraper import SimpleProfessorScraper
+from .enhanced_scraper import EnhancedProfessorScraper
+from .api_scraper import APIProfessorScraper
 # Note: Reviews require Selenium, which needs browser installation
 # from .review_scraper import ReviewScraper
 from .models import JSONLWriter
@@ -52,8 +54,14 @@ def run_full_scrape(test_mode: bool = False, max_professors: Optional[int] = Non
     try:
         # Step 1: Scrape professors
         logger.info("Step 1: Scraping professor information...")
-        prof_scraper = SimpleProfessorScraper(test_mode=test_mode)
+        # Use API scraper for reliable data extraction
+        prof_scraper = APIProfessorScraper(test_mode=test_mode)
         professors = prof_scraper.scrape_all_professors(max_professors=max_professors)
+        
+        # Enhance first 10 professors with additional details
+        if professors and not test_mode:
+            professors = prof_scraper.enhance_with_details(professors, sample_size=min(10, len(professors)))
+            
         prof_scraper.save_professors(professors)
         
         logger.info(f"Successfully scraped {len(professors)} professors")
