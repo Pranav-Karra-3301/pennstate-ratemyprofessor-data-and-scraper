@@ -198,9 +198,9 @@ Examples:
     print("\n" + "="*50)
     print("PENN STATE RATEMYPROFESSOR SCRAPER")
     print("="*50)
-    print("⚠️  WARNING: This tool is for personal/educational use only!")
-    print("⚠️  It may violate RateMyProfessors.com Terms of Service!")
-    print("⚠️  Use responsibly and at your own risk!")
+    print("⚠️  WARNING: This tool was vibecoded for personal use only!")
+    print("⚠️  It likely violates RateMyProfessors.com Terms of Service!")
+    print("⚠️  Students gotta do what they gotta do - use at your own risk!")
     print("-"*50)
     
     if test_mode:

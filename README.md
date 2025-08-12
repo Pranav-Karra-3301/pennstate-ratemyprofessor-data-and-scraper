@@ -1,10 +1,8 @@
 # Penn State RateMyProfessor Data Scraper
 
-⚠️ **WARNING: This repository and its scraping scripts are designed for personal use and educational purposes only!**
+⚠️ **Warning**: This project is mostly vibecoded and made for personal use. It may contain experimental features, incomplete implementations, and unconventional approaches. Use at your own risk and discretion. Production use is not recommended without thorough testing.
 
-⚠️ **IMPORTANT LEGAL NOTICE:** This tool likely violates the Terms of Service of both RateMyProfessors.com and potentially Penn State University policies. Use at your own risk and responsibility.
-
-⚠️ **DISCLAIMER:** The maintainers of this repository are not responsible for any misuse of this tool or any consequences arising from its use.
+⚠️ **WARNING**: This scraper was mainly vibecoded for personal use and is provided as-is. Use at your own risk. This tool likely violates RateMyProfessors.com Terms of Service and Penn State University policies. However, students gotta do what they gotta do. The maintainers are not responsible for any consequences of using this tool.
 
 ---
 
