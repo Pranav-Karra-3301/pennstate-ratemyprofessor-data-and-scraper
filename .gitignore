@@ -173,3 +173,4 @@ extracted_data_*.json
 
 # Webdriver cache
 .wdm/
+.DS_Store
