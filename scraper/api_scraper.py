@@ -136,7 +136,7 @@ class APIProfessorScraper:
             self.logger.error(f"Error searching professors: {e}")
             return None
             
-    def get_professor_details(self, legacy_id: int) -> Dict:
+    def get_professor_details(self, professor_id: str) -> Dict:
         """Get detailed information for a specific professor"""
         query = """
             query TeacherRatingsPageQuery($id: ID!) {
@@ -153,19 +153,19 @@ class APIProfessorScraper:
                         wouldTakeAgainPercent
                         teacherRatingTags {
                             tagName
+                            tagCount
                         }
                         courseCodes {
                             courseName
+                            courseCount
                         }
                     }
                 }
             }
         """
         
-        # Convert legacy ID to GraphQL ID format
-        graphql_id = f"VGVhY2hlci0{legacy_id}"  # Teacher-{id} in base64
-        
-        variables = {"id": graphql_id}
+        # Use the GraphQL ID directly (it's already in the correct format from search results)
+        variables = {"id": professor_id}
         
         try:
             response = self.session.post(
@@ -319,17 +319,22 @@ class APIProfessorScraper:
             try:
                 self.logger.info(f"Fetching details for {professor.full_name}")
                 
-                data = self.get_professor_details(professor.legacy_id)
+                data = self.get_professor_details(professor.id)
                 if data and 'data' in data and 'node' in data['data']:
                     node = data['data']['node']
                     if node:
+                        # Debug: Print the node to see what data we're getting
+                        self.logger.info(f"Node data for {professor.full_name}: {node}")
+                        
                         # Update tags
-                        if 'teacherRatingTags' in node:
-                            professor.tags = [tag['tagName'] for tag in node['teacherRatingTags']]
+                        if 'teacherRatingTags' in node and node['teacherRatingTags']:
+                            professor.tags = [tag['tagName'] for tag in node['teacherRatingTags'] if tag.get('tagName')]
+                            self.logger.info(f"Found {len(professor.tags)} tags for {professor.full_name}")
                             
                         # Update courses
-                        if 'courseCodes' in node:
-                            professor.courses = [course['courseName'] for course in node['courseCodes']]
+                        if 'courseCodes' in node and node['courseCodes']:
+                            professor.courses = [course['courseName'] for course in node['courseCodes'] if course.get('courseName')]
+                            self.logger.info(f"Found {len(professor.courses)} courses for {professor.full_name}")
                             
                 time.sleep(REQUEST_DELAY)
                 
