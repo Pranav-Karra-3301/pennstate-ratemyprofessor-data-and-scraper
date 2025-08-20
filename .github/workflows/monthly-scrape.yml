@@ -119,6 +119,8 @@ print('All JSON lines are valid')
           labels: |
             data-update
             automated
+          # Note: Update assignees as needed for your repository
+          # Can use GitHub teams like @org/data-maintainers or individual users
           assignees: Pranav-Karra-3301
       
       - name: Notify on failure

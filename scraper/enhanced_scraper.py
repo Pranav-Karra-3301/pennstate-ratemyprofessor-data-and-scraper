@@ -274,10 +274,14 @@ class EnhancedProfessorScraper:
             first_name = node.get('firstName', '')
             last_name = node.get('lastName', '')
             full_name = f"{first_name} {last_name}".strip()
+            
+            # Safely construct profile URL
+            legacy_id = node.get('legacyId')
+            profile_url = f"https://www.ratemyprofessors.com/professor/{legacy_id}" if legacy_id else None
                 
             professor = EnhancedProfessor(
                 id=node['id'],
-                legacy_id=str(node.get('legacyId', '')),
+                legacy_id=str(legacy_id) if legacy_id else '',
                 first_name=first_name,
                 last_name=last_name,
                 full_name=full_name,
@@ -289,7 +293,7 @@ class EnhancedProfessorScraper:
                 tags=tags,
                 courses=courses,
                 rating_distribution=rating_dist,
-                profile_url=f"https://www.ratemyprofessors.com/professor/{node.get('legacyId')}"
+                profile_url=profile_url
             )
             
             return professor

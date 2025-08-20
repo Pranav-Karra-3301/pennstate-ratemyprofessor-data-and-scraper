@@ -190,9 +190,13 @@ class APIProfessorScraper:
             last_name = node.get('lastName', '')
             full_name = f"{first_name} {last_name}".strip()
             
+            # Safely construct profile URL
+            legacy_id = node.get('legacyId', 0)
+            profile_url = f"https://www.ratemyprofessors.com/professor/{legacy_id}" if legacy_id else None
+            
             professor = APIProfessor(
                 id=node['id'],
-                legacy_id=node.get('legacyId', 0),
+                legacy_id=legacy_id,
                 first_name=first_name,
                 last_name=last_name,
                 full_name=full_name,
@@ -201,7 +205,7 @@ class APIProfessorScraper:
                 num_ratings=node.get('numRatings', 0),
                 would_take_again_percent=node.get('wouldTakeAgainPercent'),
                 level_of_difficulty=node.get('avgDifficulty'),
-                profile_url=f"https://www.ratemyprofessors.com/professor/{node.get('legacyId')}"
+                profile_url=profile_url
             )
             
             # Add tags if available
