@@ -18,12 +18,20 @@ This project is improved and scoped specifically for Penn State University, insp
 
 ## Features
 
-- ✅ Scrapes all professor data from Penn State University (~7,703 professors)
-- ✅ Extracts ratings, number of reviews, "would take again" percentages, and difficulty levels
+- ✅ Scrapes all professor data from Penn State University (1000+ professors)
+- ✅ Extracts comprehensive data including:
+  - 📊 Ratings, difficulty levels, and "would take again" percentages
+  - 📚 Course codes and teaching history
+  - 🏷️ Teaching style tags and characteristics
+  - 👥 Number of ratings and department information
+- ✅ Multiple scraper modes:
+  - **API Scraper**: Most reliable, uses GraphQL API
+  - **Enhanced Scraper**: Includes detailed course and tag data
+  - **Simple Scraper**: Basic HTML scraping
 - ✅ Outputs data in JSON Lines (.jsonl) format for easy processing
 - ✅ Test mode for safe experimentation with small data batches
-- ✅ Automated data updates via GitHub Actions (every 4 months)
-- ⚠️ Individual review scraping (requires browser installation - coming soon)
+- ✅ Automated monthly data updates via GitHub Actions
+- ✅ Data validation and quality checks
 
 ## Quick Start
 
@@ -42,27 +50,29 @@ pip install -r requirements.txt
 
 ### Usage Examples
 
-**Test Mode (Recommended for first run):**
+**API Scraper (Recommended - Most Reliable):**
 ```bash
-python -m scraper.main_scraper --test
-```
-*Scrapes only 10 professors for testing*
+# Test mode - scrape 10 professors
+python -m scraper.api_scraper --test
 
-**Scrape First 100 Professors:**
-```bash
-python -m scraper.main_scraper --max-professors 100
-```
+# Scrape 500 professors
+python -m scraper.api_scraper --max 500
 
-**Professors Only (No Reviews):**
-```bash
-python -m scraper.main_scraper --skip-reviews
+# Scrape 1000 professors and enhance 200 with detailed data
+python -m scraper.api_scraper --max 1000 --enhance 200
 ```
 
-**Full Scrape (WARNING: Takes hours!):**
+**Enhanced Scraper (Includes Course Data):**
 ```bash
-python -m scraper.main_scraper --full
+# Run enhanced scraper with course and tag extraction
+python -m scraper.enhanced_scraper --max 500 --enhance 100
 ```
-*⚠️ This will attempt to scrape all ~7,700 professors and may take 10+ hours*
+
+**Simple Scraper (Basic HTML Scraping):**
+```bash
+# Basic scraping without API
+python -m scraper.simple_scraper --test
+```
 
 ## Output Files
 
@@ -76,41 +86,74 @@ All scraped data is stored in the `data/` directory:
 
 ```json
 {
-  "name": "Jeff Love",
-  "department": "Psychology", 
+  "id": "VGVhY2hlci0yNzUwNjgy",
+  "legacy_id": 2750682,
+  "first_name": "Ashley",
+  "last_name": "Pallone",
+  "full_name": "Ashley Pallone",
+  "department": "Mathematics",
   "school": "Penn State University",
-  "rating": 4.5,
-  "num_ratings": 284,
-  "would_take_again_pct": 90.625,
-  "level_of_difficulty": 2.6,
-  "url": null,
-  "professor_id": null
+  "school_id": "758",
+  "overall_rating": 4.8,
+  "num_ratings": 23,
+  "would_take_again_percent": 95.65,
+  "level_of_difficulty": 2.7,
+  "tags": [
+    "Amazing lectures",
+    "Clear grading criteria",
+    "Accessible outside class",
+    "Caring",
+    "EXTRA CREDIT"
+  ],
+  "courses": [
+    "MATH140",
+    "MATH140B",
+    "MATH141",
+    "MATH141B"
+  ],
+  "profile_url": "https://www.ratemyprofessors.com/professor/2750682"
 }
 ```
 
 ## Automated Updates
 
-This repository includes a GitHub Actions workflow that automatically updates the professor data every 4 months:
+This repository includes a GitHub Actions workflow that automatically updates the professor data monthly:
 
-- **August 1st** - Fall semester update
-- **January 1st** - Spring semester update  
-- **May 1st** - Summer semester update
+- **Schedule**: Runs on the 1st of every month at 3 AM EST
+- **Manual Trigger**: Can be manually triggered from the Actions tab
+- **Pull Request**: Creates a PR with the updated data for review
+- **Validation**: Automatically validates data format and completeness
 
-This ensures the data stays current across academic terms.
+### Manual Update
+To manually trigger an update:
+1. Go to the [Actions tab](../../actions)
+2. Select "Monthly Data Update"
+3. Click "Run workflow"
+
+The workflow will:
+- Scrape up to 2000 professors
+- Enhance 500 with detailed course/tag data
+- Validate the data format
+- Create a pull request with the changes
 
 ## Technical Details
 
 ### Architecture
 
-- **Simple Scraper** (`scraper/simple_scraper.py`) - Uses requests + BeautifulSoup (no browser required)
+- **API Scraper** (`scraper/api_scraper.py`) - Uses GraphQL API for reliable data extraction
+- **Enhanced Scraper** (`scraper/enhanced_scraper.py`) - Comprehensive data with courses and tags
+- **Simple Scraper** (`scraper/simple_scraper.py`) - Basic HTML scraping with BeautifulSoup
 - **Models** (`scraper/models.py`) - Data structures for professors, reviews, and courses
 - **Configuration** (`scraper/config.py`) - All settings and Penn State specific parameters
+- **GitHub Actions** (`.github/workflows/`) - Automated CI/CD and monthly updates
 
 ### Penn State Specific Settings
 
 - School ID: 758
-- Base URL: `https://www.ratemyprofessors.com/search/professors/758?q=*`
-- Total Professors: ~7,703 (as of last update)
+- School ID (Base64): U2Nob29sLTc1OA==
+- GraphQL Endpoint: `https://www.ratemyprofessors.com/graphql`
+- Base URL: `https://www.ratemyprofessors.com/search/professors/758`
+- Total Professors: 1000+ active professors with ratings
 
 ### Rate Limiting
 
