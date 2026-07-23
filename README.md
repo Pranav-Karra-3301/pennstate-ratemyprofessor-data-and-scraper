@@ -39,7 +39,7 @@ This project is improved and scoped specifically for Penn State University, insp
 
 1. Clone this repository:
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Pranav-Karra-3301/pennstate-ratemyprofessor-data-and-scraper.git
 cd pennstate-ratemyprofessor-data-and-scraper
 ```
 
@@ -201,6 +201,7 @@ DO NOT use this tool for:
 
 ## Contributors
 
+- **Built by**: [Pranav Karra](https://pranavkarra.me)
 - **Main Contributors**: Cursor AI and Claude Sonnet 4
 - **Inspiration**: [RateMyProfessor.com-Web-Scraper](https://github.com/highlyavailable/RateMyProfessor.com-Web-Scraper)
 
